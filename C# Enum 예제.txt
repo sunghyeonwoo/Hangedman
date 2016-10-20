@@ -1,0 +1,23 @@
+using System;
+class Program
+{
+    enum Protoss
+    {
+        Artanis = 1, Karax = 2, Alarak = 3, Vorazun = 4
+    }
+
+    static void Main(string[] args)
+    {
+        Protoss protoss;
+        protoss = Protoss.Artanis;
+        int Value;
+        for (int i = 1;i <= 4;i++)
+        {
+            Console.Write(protoss + "\t");
+            Value = (int)protoss;
+            Console.WriteLine(Value);
+            protoss++;
+        }
+        Console.ReadLine();
+    }
+}
