@@ -1,0 +1,228 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace WindowsFormsApplication1
+{
+    public partial class Form1 : Form
+    {
+        string[] easy = { "basket", "right", "command", "radius", "sweep", "vanish", "amazing", "alone", "appear", "afraid", "angry", "breakfast", "boring", "breathe",
+            "castle", "coach", "comb", "clothes", "dream", "dwarf", "excite", "floor", "farmer", "footman", "holiday", "fairy", "flow", "fear", "finger", "forgot",
+            "found", "fruit", "forest", "garden", "grass", "handsome", "heart", "hunter", "house", "hurry", "invite", "jealous", "kind", "lady", "laugh", "lizard",
+            "loud", "look", "secret", "naughty", "notice", "needle", "nose", "marry", "mend", "mirror", "thin", "tray", "vanish", "present", "palace", "prince",
+            "stupid", "stair", "silver", "shine", "soldier", "spell", "still", "steal" };
+        string[] inter = { "chaos", "bland", "debris", "tardy", "length", "envious", "climax", "melt", "obstacle", "humor", "removal", "infant", "question", "ancestor",
+            "impair", "cater", "reject", "estimate", "deny", "monopoly", "triple", "crowd", "conduct", "abstract", "extract", "refine", "hijack", "zenith", "orbit",
+            "liquid", "profess", "office", "excellent", "college", "university", "citizen", "eraser", "bless", "nickname", "invade", "insist", "resist", "prolong",
+            "academy", "mission", "replay", "textbook", "enlarge", "notebook", "council", "history", "deduct", "induce", "inject", "consent", "alter", "artifact",
+            "mercury", "agony", "fact", "crisis", "berserk", "rookie", "insolent", "victim", "mystery", "opponent", "proclaim", "preface", "weird" };
+        string[] hard = { "gymnasium", "instrument", "decree", "embezzle", "insolvent", "efficient", "elaborate", "magnitude", "oblige", "unstable", "restrict", "eradicate",
+            "fabricate", "devastate", "construct", "overwhelm", "experiment", "ordinary", "antidote", "anecdote", "absent", "distort", "suffice", "discord", "compose",
+            "biography", "consider", "conflict", "disregard", "circular", "excursion", "malfeasant", "monarchy", "desolete", "fortune", "transplant", "prejudice",
+            "telescope", "monotonous", "exclaim", "function", "insidious", "humorous", "errand", "tasteful", "rhythm", "forehead", "dimention", "civilize", "pitiful",
+            "achieve", "ongoing", "conceal", "occasion", "anonymous", "respire", "botanic", "sympathy", "electron", "phonetic", "chrome", "endanger", "instinct",
+            "resonate", "prepare", "assembly", "introduce", "operation", "insipid", "hysteria" }; // 목표 단어들
+
+        string ans = null; // answer(답) 문자열
+        int life = 7; // 라이프
+        StringBuilder res = new StringBuilder(); // 표시용 문자열
+        TextBox[] tb = new TextBox[6]; // 6개의 오답용 textbox
+        public Form1()
+        {
+            InitializeComponent();
+            Random r = new Random(); // 단어 선택용 난수
+            ans = easy[r.Next(0, 69)];
+            for (int i = 0; i < ans.Length; i++) res.Append('*'); // 표시용 문자열에 * 삽입
+            Answer.Text = res.ToString(); // 표현
+            tb[0] = textBox1; // tb 배열에 textBox 매치
+            tb[1] = textBox2;
+            tb[2] = textBox3;
+            tb[3] = textBox4;
+            tb[4] = textBox5;
+            tb[5] = textBox6;
+        }
+        private bool idenoverlap(char qq) // 겹치는지 확인하는 메소드
+        {
+            int overlap = 0; // 확인용 flag
+            string makeupper = qq.ToString(); // 대문자의 경우에도 확인
+            string idenupper = makeupper.ToUpper();
+            for (int j = 0; j< 6;j++) {
+                if (idenupper.Equals(tb[j].Text))
+                {
+                    overlap = 1; // 겹치면 정수값이 1
+                    break;
+                }
+                else overlap = 0; // 아니면 0
+            }
+            if (overlap == 0) return true; // 안 겹치면 true
+            else return false;
+        }
+        private void textboxmake(char qq) // 오답 표현
+        {
+            string qqq;
+            for (int j = 0; j < 6; j++)
+            {
+                if (tb[j].Text == "" && idenoverlap(qq))
+                {
+                    qqq = qq.ToString();
+                    tb[j].Text += qqq.ToUpper(); // 텍스트박스에 대문자로 바꿔서 표현
+                    break;
+                }
+            }
+        }
+        public void textboxclear() { // 재도전용으로 textBox 초기화
+            for (int j = 0; j < 6; j++)
+            {
+                tb[j].Clear();
+            }
+        }
+        public void changepicture(int a) // 화면의 그림을 바꿔주는 메소드
+        {
+            switch (a)
+            {
+                case 7:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed0; // 끌어온 Resource를 PicutreBox의 이미지로
+                    break;
+                case 6:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed1;
+                    break;
+                case 5:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed2;
+                    break;
+                case 4:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed3;
+                    break;
+                case 3:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed4;
+                    break;
+                case 2:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed5;
+                    break;
+                case 1:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed6;
+                    break;
+                default:
+                    pictureBox1.Image = ProjectHangman.Properties.Resources.HangmanFixed7;
+                    Answer.Text = ans;
+                    MessageBox.Show("패배!");
+                    break;
+            }
+        }
+        private void button2_Click(object sender, EventArgs e)  { // easy(초급)
+            Random r = new Random();
+            ans = easy[r.Next(0, 69)];
+            Answer.Clear(); // 각종 조건들 초기화
+            textboxclear();
+            res.Clear();
+            life = 7;
+            changepicture(life);
+            for (int i = 0; i < ans.Length; i++)
+            {
+                res.Append('*');
+            }
+            Answer.Text = res.ToString();
+        }
+        private void button3_Click(object sender, EventArgs e) // intermediate(중급)
+        {
+            Random r = new Random();
+            ans = inter[r.Next(0, 69)];
+            Answer.Clear();
+            textboxclear();
+            res.Clear();
+            life = 7;
+            changepicture(life);
+            for (int i = 0; i < ans.Length; i++)
+            {
+                res.Append('*');
+            }
+           Answer.Text = res.ToString();
+        }
+        private void button4_Click(object sender, EventArgs e) // hard(상급)
+        {
+            Random r = new Random();
+            ans = hard[r.Next(0, 69)];
+            Answer.Clear();
+            textboxclear();
+            res.Clear();
+            life = 7;
+            changepicture(life);
+            for (int i = 0; i < ans.Length; i++)
+            {
+                res.Append('*');
+            }
+           Answer.Text = res.ToString();
+        }
+        private void ians_TextChanged(object sender, EventArgs e) // 문자를 받아온다
+        {
+            string q = ians.Text;
+            if (q == "") // clear();를 대비해서 아무 것도 없을 경우 return
+            {
+                return;
+            }
+            char qq = q.ToArray()[0]; // 첫 번째 글자
+            Answer.Clear(); // 받으면 곧바로 초기화(1글자만 받도록)
+            identify(qq);
+            ians.Clear();
+        }
+        private void identify(char qq)
+        {
+            int flag = 0;
+            int suc = 0; // 성공했는지 여부
+            string forlower = qq.ToString();
+            string tolower = forlower.ToLower();
+            char lower = tolower.ToArray()[0]; // 소문자도 확인하기 위해서
+            string forsuc;
+            int qqq = (int) qq;
+            Boolean isalpha = (qqq <= 64) || (91 <= qqq && qqq <= 96) || (qqq >= 123); // 영문이 아니라면
+            if (isalpha)
+            {
+                MessageBox.Show("영문 알파벳이 아닙니다!"); // MessageBox 띄운다
+                Answer.Text = res.ToString();
+                return;
+            }
+            for (int i = 0; i < ans.Length;i++)
+                {
+                    if (lower.Equals(ans.ToArray()[i])) // 맞히면 flag 1
+                    {
+                        res[i] = lower;
+                        Answer.Clear();
+                        Answer.Text = res.ToString();
+                        flag = 1;
+                    }
+                    else // 아니면 flag 0
+                    {
+                    if (flag == 1 && idenoverlap(lower)) { }
+                    else flag = 0;
+                    Answer.Text = res.ToString();
+                }
+               }
+            if (flag == 0)
+            {
+                if (idenoverlap(lower))
+                {
+                    textboxmake(qq); // 오답 표기
+                    --life; // life 감소
+                    changepicture(life); // 그림 바꾸기
+                }
+            }
+                forsuc = res.ToString();
+                if (forsuc.IndexOf('*') == -1) suc = 1; // 아스테리스크가 하나도 없으면 성공한 것이다
+                if (suc == 1) // 성공했으면 실행
+            {
+                MessageBox.Show("성공!");
+                return;
+            }
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
